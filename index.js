@@ -35,8 +35,6 @@ async function getEpisodeData(url) {
   await axios.get(url).then((response) => (animeEpisodeData = response.data));
 }
 
-// animeList.map(anime=>anime.animeTitle)
-
 async function askAnimeName() {
   const anime = await inquirer.prompt({
     name: "anime_name",
