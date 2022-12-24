@@ -58,7 +58,13 @@ async function askAnimeEpisode() {
     },
   });
 
-  animeEpisode = anime.anime_episode;
+  if (Number.parseInt(anime.anime_episode) === 0) {
+    animeEpisode = 1;
+  } else if (Number.parseInt(anime.anime_episode) > animeEpisodeData.eptotal) {
+    animeEpisode = animeEpisodeData.eptotal;
+  } else {
+    animeEpisode = anime.anime_episode;
+  }
 }
 
 async function showAnimeList(anime) {
@@ -83,12 +89,6 @@ if (animeList.length == 0) {
     console.log(chalk.greenBright(`Playing, ${animeEpisodeData.animeTitle}`));
   } else {
     await askAnimeEpisode();
-    if (animeEpisode === 0) {
-      animeEpisode = 1;
-    }
-    if (animeEpisode > animeEpisodeData.eptotal) {
-      animeEpisode = animeEpisodeData.eptotal;
-    }
     console.log(
       chalk.greenBright(
         `Playing, ${animeTitle[selectedIndex]} Episode ${animeEpisode}`
