@@ -11,7 +11,7 @@ let animeName = "";
 let animeEpisode = 1;
 let selectedIndex = 0;
 let animeEpisodeData = {
-  total_episodes: 1,
+  eptotal: 1,
   animeTitle: "",
 };
 let animeList = [];
@@ -79,12 +79,15 @@ if (animeList.length == 0) {
 } else {
   await showAnimeList(animeName);
   await getEpisodeData(`${process.env.API}/episodes/${animeId[selectedIndex]}`);
-  if (animeEpisodeData.total_episodes == 1) {
+  if (animeEpisodeData.eptotal == 1) {
     console.log(chalk.greenBright(`Playing, ${animeEpisodeData.animeTitle}`));
   } else {
     await askAnimeEpisode();
-    if (animeEpisode > animeEpisodeData.total_episodes) {
-      animeEpisode = animeEpisodeData.total_episodes;
+    if (animeEpisode === 0) {
+      animeEpisode = 1;
+    }
+    if (animeEpisode > animeEpisodeData.eptotal) {
+      animeEpisode = animeEpisodeData.eptotal;
     }
     console.log(
       chalk.greenBright(
@@ -93,5 +96,5 @@ if (animeList.length == 0) {
     );
   }
 
-  open(`${process.env.URL}/${animeId[selectedIndex]}/ep${animeEpisode}`);
+  open(`${process.env.URL}/${animeId[selectedIndex]}-episode-${animeEpisode}`);
 }
