@@ -6,13 +6,21 @@ import open from "open";
 import chalk from "chalk";
 import * as dotenv from "dotenv";
 dotenv.config();
-
+const { URL, API } = process.env
 let animeName = "";
 let animeEpisode = 1;
+let urlId = "";
 let selectedIndex = 0;
 let animeEpisodeData = {
-  eptotal: 1,
+  totalEpisodes: 1,
   animeTitle: "",
+  episodes: [
+    {
+      epNum: "",
+      episodeName: "",
+      episodeId: "",
+    },
+  ],
 };
 let animeList = [];
 let animeTitle = [];
@@ -57,11 +65,12 @@ async function askAnimeEpisode() {
       return 1;
     },
   });
-
   if (Number.parseInt(anime.anime_episode) === 0) {
     animeEpisode = 1;
-  } else if (Number.parseInt(anime.anime_episode) > animeEpisodeData.eptotal) {
-    animeEpisode = animeEpisodeData.eptotal;
+  } else if (
+    Number.parseInt(anime.anime_episode) > animeEpisodeData.totalEpisodes
+  ) {
+    animeEpisode = animeEpisodeData.totalEpisodes;
   } else {
     animeEpisode = anime.anime_episode;
   }
@@ -79,22 +88,29 @@ async function showAnimeList(anime) {
 }
 
 await askAnimeName();
-await getData(`${process.env.API}/search?keyw=${animeName}`);
+await getData(`${API}/search?keyw=${animeName}`);
 if (animeList.length == 0) {
   console.log(chalk.redBright("Anime Not Found! 😔"));
 } else {
   await showAnimeList(animeName);
-  await getEpisodeData(`${process.env.API}/episodes/${animeId[selectedIndex]}`);
-  if (animeEpisodeData.eptotal == 1) {
+  await getEpisodeData(`${API}/info/${animeId[selectedIndex]}`);
+  if (animeEpisodeData.totalEpisodes == 1) {
     console.log(chalk.greenBright(`Playing, ${animeEpisodeData.animeTitle}`));
   } else {
     await askAnimeEpisode();
     console.log(
       chalk.greenBright(
-        `Playing, ${animeTitle[selectedIndex]} Episode ${animeEpisode}`
+        `Playing, ${animeEpisodeData.animeTitle} Episode ${animeEpisode}`
       )
     );
   }
 
-  open(`${process.env.URL}/${animeId[selectedIndex]}-episode-${animeEpisode}`);
+  // console.log(animeEpisodeData.episodes[selectedIndex].episodeId);
+
+  urlId = animeEpisodeData.episodes[animeEpisode - 1].episodeId.replace(
+    "-episode-",
+    "?ep="
+  );
+
+  open(`${URL}/watch/${urlId}`);
 }
