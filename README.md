@@ -2,4 +2,4 @@
 
 A command line interface to watch anime
 
-[Demo](https://imgur.com/UfArKdO "Anime CLI Demo")
+[Demo](https://i.imgur.com/UfArKdO.mp4 "Anime CLI Demo")
